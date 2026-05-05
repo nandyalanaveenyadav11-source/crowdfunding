@@ -11,6 +11,15 @@ Route::get('/', [CampaignController::class, 'index'])->name('home');
 
 Route::resource('campaigns', CampaignController::class);
 
+Route::get('/debug-mail', function() {
+    return [
+        'default' => config('mail.default'),
+        'mailers' => array_keys(config('mail.mailers')),
+        'brevo_config' => config('mail.mailers.brevo-api'),
+        'env_mailer' => env('MAIL_MAILER')
+    ];
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
