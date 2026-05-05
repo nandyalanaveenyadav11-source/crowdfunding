@@ -20,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register Custom Brevo API Mail Driver
+        \Illuminate\Support\Facades\Mail::extend('brevo-api', function (array $config) {
+            return new \App\Mail\BrevoTransport(config('services.brevo.key'));
+        });
+
         \Illuminate\Auth\Notifications\VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new \Illuminate\Notifications\Messages\MailMessage)
                 ->subject('Verify Your CrowdFund Account')
