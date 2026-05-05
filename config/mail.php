@@ -65,6 +65,10 @@ return [
             'transport' => 'resend',
         ],
 
+        'brevo-api' => [
+            'transport' => 'brevo-api',
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
