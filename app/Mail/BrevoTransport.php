@@ -11,10 +11,10 @@ class BrevoTransport extends AbstractTransport
 {
     protected $apiKey;
 
-    public function __construct(string $apiKey)
+    public function __construct(array $config)
     {
         parent::__construct();
-        $this->apiKey = $apiKey;
+        $this->apiKey = $config['key'] ?? config('services.brevo.key');
     }
 
     protected function doSend(SentMessage $message): void

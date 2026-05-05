@@ -12,10 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Register Custom Brevo API Mail Driver
-        \Illuminate\Support\Facades\Mail::extend('brevo-api', function (array $config) {
-            return new \App\Mail\BrevoTransport(config('services.brevo.key'));
-        });
+        //
     }
 
     /**
