@@ -34,5 +34,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('admin-access', function ($user) {
             return $user->role === 'admin';
         });
+
+        // Force HTTPS in production to fix styling issues
+        if (config('app.env') === 'production' || env('FORCE_HTTPS')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }
