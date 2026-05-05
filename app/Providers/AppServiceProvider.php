@@ -35,6 +35,38 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 'admin';
         });
 
+        // Global Mail Hijacker: Catch ALL outgoing emails and send via Brevo API
+        \Illuminate\Support\Facades\Event::listen(\Illuminate\Mail\Events\MessageSending::class, function ($event) {
+            $message = $event->message;
+            
+            try {
+                $client = new \GuzzleHttp\Client();
+                $client->post('https://api.brevo.com/v3/smtp/email', [
+                    'headers' => [
+                        'api-key' => env('BREVO_API_KEY'),
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'json' => [
+                        'sender' => [
+                            'name' => config('mail.from.name', 'CrowdFund'),
+                            'email' => config('mail.from.address', 'nandyalanaveenyadav11@gmail.com'),
+                        ],
+                        'to' => collect($message->getTo())->map(fn($address) => [
+                            'email' => $address->getAddress(),
+                            'name' => $address->getName() ?: 'User',
+                        ])->toArray(),
+                        'subject' => $message->getSubject(),
+                        'htmlContent' => $message->getHtmlBody() ?: $message->getTextBody(),
+                    ],
+                ]);
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Global Brevo Hijacker Error: ' . $e->getMessage());
+            }
+
+            return false; // STOP Laravel from trying to send it via SMTP/Log
+        });
+
         // Force HTTPS in production to fix styling issues
         if (config('app.env') === 'production' || env('FORCE_HTTPS')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
