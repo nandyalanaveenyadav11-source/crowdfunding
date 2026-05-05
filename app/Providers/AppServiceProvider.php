@@ -54,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
                     'json' => [
                         'sender' => [
                             'name' => config('mail.from.name', 'CrowdFund'),
-                            'email' => config('mail.from.address', 'nandyalanaveenyadav11@gmail.com'),
+                            'email' => config('mail.from.address', 'naveen.n@spsu.ac.in'),
                         ],
                         'to' => collect($to)->map(fn($address) => [
                             'email' => $address->getAddress(),
