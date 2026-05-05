@@ -20,6 +20,11 @@ Route::get('/debug-mail', function() {
     ];
 });
 
+Route::get('/force-seed', function() {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+    return "Database Seeded Successfully! You can now log in as admin.";
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
