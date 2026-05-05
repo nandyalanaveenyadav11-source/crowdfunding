@@ -21,26 +21,31 @@ class BrevoTransport extends AbstractTransport
     {
         $email = MessageConverter::toEmail($message->getOriginalMessage());
         
-        $client = new Client();
-        $client->post('https://api.brevo.com/v3/smtp/email', [
-            'headers' => [
-                'api-key' => $this->apiKey,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'json' => [
-                'sender' => [
-                    'name' => config('mail.from.name'),
-                    'email' => config('mail.from.address'),
+        try {
+            $client = new Client();
+            $response = $client->post('https://api.brevo.com/v3/smtp/email', [
+                'headers' => [
+                    'api-key' => $this->apiKey,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
                 ],
-                'to' => collect($email->getTo())->map(fn($address) => [
-                    'email' => $address->getAddress(),
-                    'name' => $address->getName(),
-                ])->toArray(),
-                'subject' => $email->getSubject(),
-                'htmlContent' => $email->getHtmlBody(),
-            ],
-        ]);
+                'json' => [
+                    'sender' => [
+                        'name' => config('mail.from.name', 'CrowdFund'),
+                        'email' => config('mail.from.address', 'nandyalanaveenyadav11@gmail.com'),
+                    ],
+                    'to' => collect($email->getTo())->map(fn($address) => [
+                        'email' => $address->getAddress(),
+                        'name' => $address->getName() ?: 'User',
+                    ])->toArray(),
+                    'subject' => $email->getSubject(),
+                    'htmlContent' => $email->getHtmlBody(),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Brevo API Error: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function __toString(): string
