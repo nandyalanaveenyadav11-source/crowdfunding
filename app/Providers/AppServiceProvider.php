@@ -77,13 +77,6 @@ class AppServiceProvider extends ServiceProvider
         // Force HTTPS in production
         if (config('app.env') === 'production' || env('FORCE_HTTPS')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
-            
-            // Fix: Only force root URL if it's set and not empty, 
-            // and ensure we don't double up the protocol
-            $appUrl = config('app.url');
-            if ($appUrl) {
-                \Illuminate\Support\Facades\URL::forceRootUrl($appUrl);
-            }
         }
     }
 }
