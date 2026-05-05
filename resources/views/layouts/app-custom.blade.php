@@ -8,7 +8,7 @@
     <title>{{ config('app.name', 'CrowdFund') }} | Raise Funds for Your Dreams</title>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('css/style.css') }}">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
