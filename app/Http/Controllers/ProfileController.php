@@ -42,23 +42,16 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Restriction: Only Admins can delete accounts
+        if (!$request->user()->isAdmin()) {
+            return Redirect::route('profile.edit')->with('error', 'Account deletion is restricted. Please contact the administrator to request account removal.');
+        }
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
-
-        // Restriction: Cannot delete if active campaigns or debt/equity based campaigns exist
-        $hasRestrictedCampaigns = \App\Models\Campaign::where('user_id', $user->id)
-            ->where(function($query) {
-                $query->where('status', 'approved')
-                      ->orWhereIn('type', ['debt', 'equity']);
-            })
-            ->exists();
-
-        if ($hasRestrictedCampaigns) {
-            return Redirect::route('profile.edit')->with('error', 'Account deletion restricted: You have active campaigns or ongoing financial obligations (Debt/Equity). Please settle these before closing your account.');
-        }
 
         Auth::logout();
 

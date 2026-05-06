@@ -62,20 +62,6 @@
                     </div>
                     @include('profile.partials.update-password-form')
                 </div>
-
-                <!-- Delete Account -->
-                <div class="form-card" style="border-left: 5px solid var(--accent);">
-                    <div style="margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem;">
-                        <div style="background: rgba(244, 63, 94, 0.1); color: var(--accent); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                            <i data-lucide="trash-2"></i>
-                        </div>
-                        <div>
-                            <h2 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: var(--accent);">Danger Zone</h2>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">Once your account is deleted, all of its resources and data will be permanently deleted.</p>
-                        </div>
-                    </div>
-                    @include('profile.partials.delete-user-form')
-                </div>
             </div>
         </main>
     </div>
