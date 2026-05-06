@@ -77,6 +77,6 @@ class ProfileController extends Controller
             \Illuminate\Support\Facades\Log::error("Deletion Request Email Error: " . $e->getMessage());
         }
 
-        return Redirect::route('profile.edit')->with('status', 'deletion-requested');
+        return Redirect::route('profile.edit')->with('status', 'deletion-requested')->with('success', 'YOUR DELETION REQUEST WAS RECEIVED SUCCESSFULLY!');
     }
 }
