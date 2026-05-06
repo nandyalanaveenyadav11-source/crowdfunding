@@ -60,16 +60,22 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('error', 'Account deletion restricted: You have active campaigns or ongoing financial obligations (Debt/Equity). Please settle these before closing your account.');
         }
 
+        // Mark for deletion instead of deleting
         $user->update(['delete_requested' => true]);
         
-        // 1. Notify Admin
-        $admin = \App\Models\User::where('role', 'admin')->first();
-        if ($admin) {
-            $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
-        }
+        try {
+            // 1. Notify Admin
+            $admin = \App\Models\User::where('role', 'admin')->first();
+            if ($admin) {
+                $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
+            }
 
-        // 2. Notify User (Confirmation)
-        $user->notify(new \App\Notifications\DeletionRequestUserConfirmation());
+            // 2. Notify User (Confirmation)
+            $user->notify(new \App\Notifications\DeletionRequestUserConfirmation());
+        } catch (\Exception $e) {
+            // Log the error but don't crash the user's request
+            \Illuminate\Support\Facades\Log::error("Deletion Request Email Error: " . $e->getMessage());
+        }
 
         return Redirect::route('profile.edit')->with('status', 'deletion-requested');
     }
