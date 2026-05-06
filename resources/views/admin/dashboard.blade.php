@@ -12,10 +12,10 @@
                 <a href="{{ route('admin.dashboard') }}" class="sidebar-link active">
                     <i data-lucide="shield"></i> Overview
                 </a>
-                <a href="#" class="sidebar-link">
+                <a href="#campaign-moderation" class="sidebar-link">
                     <i data-lucide="megaphone"></i> All Campaigns
                 </a>
-                <a href="#" class="sidebar-link">
+                <a href="#user-directory" class="sidebar-link">
                     <i data-lucide="users"></i> User Management
                 </a>
                 <a href="#" class="sidebar-link">
@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div style="margin-bottom: 6rem;">
+            <div id="campaign-moderation" style="margin-bottom: 6rem;">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;">
                     <div style="background: var(--text-main); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i data-lucide="clipboard-list" style="width: 20px; height: 20px;"></i>
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div>
+            <div id="user-directory">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;">
                     <div style="background: var(--text-main); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                         <i data-lucide="users" style="width: 20px; height: 20px;"></i>
