@@ -21,8 +21,19 @@ Route::get('/debug-mail', function() {
 });
 
 Route::get('/force-seed', function() {
+    // Force update admin user
+    \App\Models\User::updateOrCreate(
+        ['role' => 'admin'],
+        [
+            'name' => 'Admin User',
+            'email' => 'admincrowdfund@gmail.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'email_verified_at' => now(),
+        ]
+    );
+
     \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    return "Database Seeded Successfully! You can now log in as admin.";
+    return "SUCCESS: Admin email set to admincrowdfund@gmail.com with password: password. You can now login.";
 });
 
 Route::middleware('auth')->group(function () {
