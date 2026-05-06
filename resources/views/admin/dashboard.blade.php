@@ -18,9 +18,6 @@
                 <a href="#user-directory" class="sidebar-link">
                     <i data-lucide="users"></i> User Management
                 </a>
-                <a href="#deletion-requests" class="sidebar-link" style="color: var(--error-color);">
-                    <i data-lucide="user-x"></i> Deletion Requests
-                </a>
                 <a href="#" class="sidebar-link">
                     <i data-lucide="bar-chart-3"></i> Reports
                 </a>
@@ -111,47 +108,6 @@
                     </table>
                 </div>
             </div>
-
-            @if($deletionRequests->count() > 0)
-            <div id="deletion-requests" style="margin-bottom: 6rem; border: 2px solid var(--error-color); padding: 2rem; border-radius: var(--radius-lg); background: rgba(239, 68, 68, 0.05);">
-                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
-                    <div style="background: var(--error-color); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i data-lucide="user-x" style="width: 20px; height: 20px;"></i>
-                    </div>
-                    <h2 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em; color: var(--error-color);">Account Deletion Requests</h2>
-                </div>
-                
-                <div style="background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                        <thead>
-                            <tr style="background: #fcfdfe; border-bottom: 1px solid var(--border);">
-                                <th style="padding: 1.5rem; font-weight: 800; color: #475569; font-size: 0.85rem; text-transform: uppercase;">User</th>
-                                <th style="padding: 1.5rem; font-weight: 800; color: #475569; font-size: 0.85rem; text-transform: uppercase;">Reason</th>
-                                <th style="padding: 1.5rem; font-weight: 800; color: #475569; font-size: 0.85rem; text-transform: uppercase;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($deletionRequests as $user)
-                                <tr style="border-bottom: 1px solid var(--border);">
-                                    <td style="padding: 1.5rem;">
-                                        <p style="font-weight: 800; color: var(--text-main);">{{ $user->name }}</p>
-                                        <p style="font-size: 0.85rem; color: var(--text-muted);">{{ $user->email }}</p>
-                                    </td>
-                                    <td style="padding: 1.5rem; color: var(--error-color); font-weight: 600;">User requested deletion</td>
-                                    <td style="padding: 1.5rem;">
-                                        <form action="{{ route('admin.users.delete', $user) }}" method="POST" onsubmit="return confirm('CRITICAL: This will permanently delete the user and all their data. Proceed?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn" style="background: var(--error-color); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600;">Confirm Permanent Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            @endif
 
             <div id="user-directory">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;">

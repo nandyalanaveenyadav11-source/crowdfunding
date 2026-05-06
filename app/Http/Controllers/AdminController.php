@@ -12,8 +12,7 @@ class AdminController extends Controller
     {
         $campaigns = Campaign::with('user')->latest()->get();
         $users = User::latest()->get();
-        $deletionRequests = User::where('delete_requested', true)->latest()->get();
-        return view('admin.dashboard', compact('campaigns', 'users', 'deletionRequests'));
+        return view('admin.dashboard', compact('campaigns', 'users'));
     }
 
     public function updateCampaignStatus(Request $request, Campaign $campaign)

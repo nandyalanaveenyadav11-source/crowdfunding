@@ -34,20 +34,6 @@
                 <p style="color: var(--text-muted); font-size: 1.25rem;">Manage your personal information and security preferences.</p>
             </div>
 
-            <!-- Global Alerts -->
-            @if (session('status') === 'deletion-requested')
-                <div style="background: rgba(16, 185, 129, 0.1); color: #059669; padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(16, 185, 129, 0.2); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
-                    <i data-lucide="check-circle"></i>
-                    <p style="font-weight: 600;">Success: Your account deletion request has been sent to the administrator.</p>
-                </div>
-            @endif
-            @if (session('error'))
-                <div style="background: rgba(244, 63, 94, 0.1); color: var(--accent); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(244, 63, 94, 0.2); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;">
-                    <i data-lucide="alert-circle"></i>
-                    <p style="font-weight: 600;">{{ session('error') }}</p>
-                </div>
-            @endif
-
             <div style="display: flex; flex-direction: column; gap: 3rem;">
                 <!-- Profile Information -->
                 <div class="form-card">

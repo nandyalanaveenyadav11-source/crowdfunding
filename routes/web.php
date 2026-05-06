@@ -21,10 +21,7 @@ Route::get('/debug-mail', function() {
 });
 
 Route::get('/force-seed', function() {
-    // 1. Run migrations to ensure all columns (like delete_requested) exist
-    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-
-    // 2. Force update admin user
+    // Force update admin user
     \App\Models\User::updateOrCreate(
         ['role' => 'admin'],
         [
@@ -36,7 +33,7 @@ Route::get('/force-seed', function() {
     );
 
     \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    return "SUCCESS: Database Migrated & Admin email set to admincrowdfund@gmail.com with password: password.";
+    return "SUCCESS: Admin email set to admincrowdfund@gmail.com with password: password. You can now login.";
 });
 
 Route::middleware('auth')->group(function () {

@@ -42,7 +42,7 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
+        $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
@@ -60,23 +60,13 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('error', 'Account deletion restricted: You have active campaigns or ongoing financial obligations (Debt/Equity). Please settle these before closing your account.');
         }
 
-        // MASTER KEY: Direct query to force the update
-        \Illuminate\Support\Facades\DB::table('users')
-            ->where('id', $user->id)
-            ->update(['delete_requested' => true]);
-        
-        try {
-            // Notify Admin
-            $admin = \App\Models\User::where('role', 'admin')->first();
-            if ($admin) {
-                $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
-            }
-            // Notify User
-            $user->notify(new \App\Notifications\DeletionRequestUserConfirmation());
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Deletion Request Email Error: " . $e->getMessage());
-        }
+        Auth::logout();
 
-        return Redirect::route('profile.edit')->with('status', 'deletion-requested')->with('success', 'YOUR DELETION REQUEST WAS RECEIVED SUCCESSFULLY!');
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
 }
