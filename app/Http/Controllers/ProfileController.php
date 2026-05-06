@@ -62,11 +62,14 @@ class ProfileController extends Controller
 
         $user->update(['delete_requested' => true]);
         
-        // Notify Admin
+        // 1. Notify Admin
         $admin = \App\Models\User::where('role', 'admin')->first();
         if ($admin) {
             $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
         }
+
+        // 2. Notify User (Confirmation)
+        $user->notify(new \App\Notifications\DeletionRequestUserConfirmation());
 
         return Redirect::route('profile.edit')->with('status', 'deletion-requested');
     }
