@@ -41,7 +41,11 @@ class AppServiceProvider extends ServiceProvider
             $to = $message->getTo();
             $recipient = count($to) > 0 ? $to[0]->getAddress() : 'unknown';
             
-            \Illuminate\Support\Facades\Log::info("Global Hijacker: Attempting to send email to {$recipient}");
+            // Get sender from config or fallback
+            $senderEmail = config('mail.from.address') ?: 'naveen.n@spsu.ac.in';
+            $senderName = config('mail.from.name') ?: 'CrowdFund';
+
+            \Illuminate\Support\Facades\Log::info("Global Hijacker: Attempting to send email to {$recipient} from {$senderEmail}");
 
             try {
                 $client = new \GuzzleHttp\Client();
@@ -53,8 +57,8 @@ class AppServiceProvider extends ServiceProvider
                     ],
                     'json' => [
                         'sender' => [
-                            'name' => config('mail.from.name', 'CrowdFund'),
-                            'email' => config('mail.from.address', 'naveen.n@spsu.ac.in'),
+                            'name' => $senderName,
+                            'email' => $senderEmail,
                         ],
                         'to' => collect($to)->map(fn($address) => [
                             'email' => $address->getAddress(),
@@ -66,8 +70,11 @@ class AppServiceProvider extends ServiceProvider
                 ]);
                 
                 \Illuminate\Support\Facades\Log::info("Global Hijacker: Successfully sent to Brevo API for {$recipient}");
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                $responseBody = $e->getResponse()->getBody()->getContents();
+                \Illuminate\Support\Facades\Log::error("Global Hijacker API ERROR for {$recipient}: " . $responseBody);
             } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error("Global Hijacker FAILED for {$recipient}: " . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error("Global Hijacker SYSTEM ERROR for {$recipient}: " . $e->getMessage());
             }
 
             return false; // STOP Laravel from trying to send it via SMTP/Log

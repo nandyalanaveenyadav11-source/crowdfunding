@@ -16,12 +16,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin User
-        \App\Models\User::create([
-            'name' => 'Admin User',
-            'email' => 'admincrowdfund@gmail.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        \App\Models\User::updateOrCreate(
+            ['role' => 'admin'],
+            [
+                'name' => 'Admin User',
+                'email' => 'admincrowdfund@gmail.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            ]
+        );
 
         // Regular User
         $user = \App\Models\User::create([
