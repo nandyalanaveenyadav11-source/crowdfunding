@@ -9,10 +9,21 @@
         </p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    @if(Auth::user()->delete_requested)
+        <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(239, 68, 68, 0.2); margin-top: 1rem;">
+            <p style="font-weight: 600;">⚠️ Account Deletion Pending Admin Approval</p>
+            <p style="font-size: 0.875rem;">You have requested to delete your account. Our administrator will review your request and process it shortly.</p>
+        </div>
+        <x-danger-button disabled style="opacity: 0.5; cursor: not-allowed; margin-top: 1rem;">
+            {{ __('Deletion Request Sent') }}
+        </x-danger-button>
+    @else
+        <x-danger-button
+            x-data=""
+            x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+            class="mt-4"
+        >{{ __('Request Account Deletion') }}</x-danger-button>
+    @endif
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
         <form method="post" action="{{ route('profile.destroy') }}" class="p-6">

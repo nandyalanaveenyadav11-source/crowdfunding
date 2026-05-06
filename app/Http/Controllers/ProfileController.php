@@ -60,13 +60,14 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('error', 'Account deletion restricted: You have active campaigns or ongoing financial obligations (Debt/Equity). Please settle these before closing your account.');
         }
 
-        Auth::logout();
+        $user->update(['delete_requested' => true]);
+        
+        // Notify Admin
+        $admin = \App\Models\User::where('role', 'admin')->first();
+        if ($admin) {
+            $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
+        }
 
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit')->with('status', 'deletion-requested');
     }
 }
