@@ -76,7 +76,7 @@ class CampaignController extends Controller
     public function edit(Campaign $campaign)
     {
         try {
-            $this->authorize('update', $campaign);
+            \Illuminate\Support\Facades\Gate::authorize('update', $campaign);
             return view('campaigns.edit', compact('campaign'));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Edit Campaign Error: " . $e->getMessage());
@@ -87,7 +87,7 @@ class CampaignController extends Controller
 
     public function update(Request $request, Campaign $campaign)
     {
-        $this->authorize('update', $campaign);
+        \Illuminate\Support\Facades\Gate::authorize('update', $campaign);
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -116,7 +116,7 @@ class CampaignController extends Controller
 
     public function destroy(Campaign $campaign)
     {
-        $this->authorize('delete', $campaign);
+        \Illuminate\Support\Facades\Gate::authorize('delete', $campaign);
         $campaign->delete();
         return redirect()->route('dashboard')->with('success', 'Campaign deleted.');
     }
