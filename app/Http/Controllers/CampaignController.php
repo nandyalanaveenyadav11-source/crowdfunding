@@ -75,8 +75,14 @@ class CampaignController extends Controller
 
     public function edit(Campaign $campaign)
     {
-        $this->authorize('update', $campaign);
-        return view('campaigns.edit', compact('campaign'));
+        try {
+            $this->authorize('update', $campaign);
+            return view('campaigns.edit', compact('campaign'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Edit Campaign Error: " . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error($e->getTraceAsString());
+            throw $e;
+        }
     }
 
     public function update(Request $request, Campaign $campaign)
