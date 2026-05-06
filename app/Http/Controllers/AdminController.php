@@ -23,6 +23,11 @@ class AdminController extends Controller
 
         $campaign->update(['status' => $request->status]);
 
+        // Notify User if approved
+        if ($request->status === 'approved') {
+            $campaign->user->notify(new \App\Notifications\CampaignApprovedNotification($campaign));
+        }
+
         return back()->with('success', 'Campaign status updated to ' . $request->status);
     }
 

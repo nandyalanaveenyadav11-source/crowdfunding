@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         // Admin User
         \App\Models\User::create([
             'name' => 'Admin User',
-            'email' => 'admin@crowdfund.com',
+            'email' => 'admincrowdfund@gmail.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'admin',
         ]);

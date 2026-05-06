@@ -62,8 +62,14 @@ class CampaignController extends Controller
             $data['image'] = $imagePath;
         }
 
-        Campaign::create($data);
-
+        $campaign = Campaign::create($data);
+        
+        // Notify Admin
+        $admin = \App\Models\User::where('role', 'admin')->first();
+        if ($admin) {
+            $admin->notify(new \App\Notifications\NewCampaignNotification($campaign));
+        }
+ 
         return redirect()->route('dashboard')->with('success', 'Campaign created and pending approval.');
     }
 
