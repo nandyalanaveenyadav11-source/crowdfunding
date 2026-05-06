@@ -42,8 +42,9 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // DEEP SCAN: See exactly what the database looks like
-        dd('Database Columns:', \Illuminate\Support\Facades\Schema::getColumnListing('users'));
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
 
         $user = $request->user();
 
@@ -59,18 +60,18 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('error', 'Account deletion restricted: You have active campaigns or ongoing financial obligations (Debt/Equity). Please settle these before closing your account.');
         }
 
-        // Mark for deletion
-        $user->delete_requested = true;
-        $user->save();
+        // MASTER KEY: Direct query to force the update
+        \Illuminate\Support\Facades\DB::table('users')
+            ->where('id', $user->id)
+            ->update(['delete_requested' => true]);
         
         try {
-            // 1. Notify Admin
+            // Notify Admin
             $admin = \App\Models\User::where('role', 'admin')->first();
             if ($admin) {
                 $admin->notify(new \App\Notifications\DeletionRequestNotification($user));
             }
-
-            // 2. Notify User (Confirmation)
+            // Notify User
             $user->notify(new \App\Notifications\DeletionRequestUserConfirmation());
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Deletion Request Email Error: " . $e->getMessage());
