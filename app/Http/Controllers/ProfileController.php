@@ -42,9 +42,8 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+        // DEEP SCAN: See exactly what the database looks like
+        dd('Database Columns:', \Illuminate\Support\Facades\Schema::getColumnListing('users'));
 
         $user = $request->user();
 
